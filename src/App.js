@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
-import { isJSON } from 'json-validator';
 import './App.css';
 
 const API_URL = 'https://bajaj-backend-new.vercel.app/api/bfhl';
@@ -18,12 +17,21 @@ function App() {
     { value: 'highest_lowercase_alphabet', label: 'Highest lowercase alphabet' },
   ];
 
+  const isValidJSON = (str) => {
+    try {
+      JSON.parse(str);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setResponse(null);
 
-    if (!isJSON(input)) {
+    if (!isValidJSON(input)) {
       setError('Invalid JSON input');
       return;
     }
@@ -34,6 +42,7 @@ function App() {
       setResponse(res.data);
     } catch (err) {
       setError('Error processing request');
+      console.error(err);
     }
   };
 
